@@ -14,15 +14,6 @@ node {
         app = docker.build("kaimor777/nginx-vim")
     }
 
-    stage('Test image') {
-        /* We test our image with a simple smoke test:
-         * Run a curl inside the newly-build Docker image */
-
-        app.inside {
-            sh 'curl http://localhost:80 || exit 1'
-        }
-    }
-
     stage('Push image') {
         /* Finally, we'll push the image with two tags:
          * First, the incremental build number from Jenkins
