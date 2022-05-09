@@ -5,7 +5,7 @@ metadata:
     type: dev
   name: nginx-deploy
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       type: dev
@@ -27,4 +27,3 @@ spec:
             cpu: 200m
       imagePullSecrets:
               - name: regcred
-       
