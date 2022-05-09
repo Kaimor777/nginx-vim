@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    type: dev
+  name: nginx-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: dev
+  template:
+    metadata:
+      labels:
+        type: dev
+    spec:
+      containers:
+      - image: kaimor777/nginx-vim:latest
+        name: nginx-vim
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+      imagePullSecrets:
+              - name: regcred
+       
