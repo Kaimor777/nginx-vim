@@ -5,7 +5,7 @@ metadata:
     type: dev
   name: nginx-deploy
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       type: dev
