@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
 #  name: prometheus
-  namespace: argocd                                # Namespace in which ArgoCD is deployed
+  namespace: default                                # Namespace in which ArgoCD is deployed
 spec:
   destination:
     namespace: monitoring
