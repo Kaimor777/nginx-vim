@@ -11,7 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("kaimor777/tikal/code")
+        app = docker.build("kaimor777/nginx-vim")
     }
 
     stage('Push image') {
