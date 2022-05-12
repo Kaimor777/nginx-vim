@@ -18,7 +18,7 @@ spec:
   - IPv4
   ipFamilyPolicy: SingleStack
   ports:
-  - nodePort: 31713
+  - nodePort: 32626
     port: 80
     protocol: TCP
     targetPort: 80
@@ -28,4 +28,3 @@ spec:
   type: NodePort
 status:
   loadBalancer: {}
-
