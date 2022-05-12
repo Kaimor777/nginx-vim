@@ -6,12 +6,8 @@ metadata:
     type: dev
   name: nginx-deploy
   namespace: default
-  resourceVersion: "45448"
   uid: ce8f6e9f-a7a6-485c-bc97-48e67de06d02
 spec:
-  clusterIP: 10.102.31.53
-  clusterIPs:
-  - 10.102.31.53
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
   ipFamilies:
