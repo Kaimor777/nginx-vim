@@ -15,7 +15,7 @@ spec:
         type: dev
     spec:
       containers:
-      - image: kaimor777/nginx-vim:latest
+      - image: kaimor777/nginx-vim:26
         name: nginx-vim
         imagePullPolicy: "Always"
         ports:
