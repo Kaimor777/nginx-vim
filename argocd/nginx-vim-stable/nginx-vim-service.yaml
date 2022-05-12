@@ -6,7 +6,6 @@ metadata:
     type: dev
   name: nginx-deploy
   namespace: default
-  uid: ce8f6e9f-a7a6-485c-bc97-48e67de06d02
 spec:
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
