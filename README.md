@@ -34,7 +34,7 @@ Create 3 virtual machines:
  Worker Node: 4 CPU 4 GB RAM 10 GB VHD 1 NIC
   NIC connected to **NAT network**
 
-##### Prepare the VM's
+##### Prepare the VM's <a name='Prepare the VM'></a>
 
 ***Following must be done on all machines***
 
@@ -236,7 +236,7 @@ helm version
 
 ##### Add secondary NIC to Master node
 
-Add it to host-Only network and edit netplan file to setup a static [IP configuration](#Prepare the VM's)
+Add it to host-Only network and edit netplan file to setup a static [IP configuration](#Prepare the VM)
 
 ##### Install ArgoCD via Helm
 
