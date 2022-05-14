@@ -6,7 +6,7 @@ metadata:
   namespace: default                                # Namespace in which ArgoCD is deployed
 spec:
   destination:
-    namespace: monitoring
+    namespace: default
     server: https://kubernetes.default.svc
   project: default
   source:
