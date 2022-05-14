@@ -253,7 +253,6 @@ Add it to host-Only network and edit netplan file to setup a static IP configura
 
 ##### Install ArgoCD via Helm
 
-
 ```shell
 helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd argo/argo-cd
@@ -268,6 +267,31 @@ kubectl port-forward service/argocd-server -n default 8090:443 --address="0.0.0.
 
 Web UI of argoCD will be accessible through any IP of *Master* node
 
+### DockerHub
+
+Create a private repository within your account named *nginx-vim*
+
+On *Master* node
+
+Login to docker
+
+```shell
+docker login
+```
+
+View vconfig file
+
+```shell
+cat ~/.docker/config.json
+```
+
+Create a secret for Kubernetes to authenticate
+
+```shell
+kubectl create secret generic regcred \
+    --from-file=.dockerconfigjson=<path/to/.docker/config.json> \
+    --type=kubernetes.io/dockerconfigjson
+```
 
 ### GitHub
 
@@ -312,7 +336,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("kaimor777/nginx-vim")
+        app = docker.build("YOUR_ACCOUNT_ON_DOCKERHUB/nginx-vim")
     }
 
     stage('Push image') {
