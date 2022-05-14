@@ -39,3 +39,10 @@ Add static IP configuration including default route and DNS servers
 Restart netplan service
 
 Change hostname on all machines to unique one
+
+Disable swap
+
+```bash
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo swapoff -a
+```
