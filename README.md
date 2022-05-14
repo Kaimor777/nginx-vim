@@ -141,9 +141,9 @@ sudo systemctl disable ufw
 sudo systemctl stop ufw
 ```
 
-On ***Master*** node initialize clucter
+On ***Master*** proceed with following
 
-***Pay attention CIDR 10.10.0.0/16 must NOT be used on any part of the network***
+***Pay attention CIDR 10.244.0.0/16 must NOT be used on any part of the network***
 
 ```bash
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
@@ -172,3 +172,5 @@ Install CNI (Flannel)
 ```shell
 kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
 ```
+
+*To join Worker nodes execute copied string **kubeadm join** with sudo*
