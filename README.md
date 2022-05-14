@@ -34,6 +34,10 @@ Create 3 virtual machines:
  Worker Node: 4 CPU 4 GB RAM 10 GB VHD 1 NIC
   NIC connected to **NAT network**
 
+##### Prepare the VM's
+
+***Following must be done on all machines***
+
 Install Ubuntu 20.04 LTS Server following [installation procedure](https://linuxhint.com/install_ubuntu_virtualbox_2004/)
 
 Login to created machines and change IP addresses to static
@@ -129,3 +133,20 @@ sudo apt update
 sudo apt -y install vim git curl wget kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
+
+***For testing purposes only ufw must be disabled***
+
+```bash
+sudo systemctl disable ufw
+sudo systemctl stop ufw
+```
+
+On ***Master*** node initialize clucter
+
+***Pay attention CIDR 10.10.0.0/16 must NOT be used on any part of the network***
+
+```bash
+sudo kubeadm init --pod-network-cidr=10.10.0.0/16
+```
+
+Please copy the line started with ~~~kubeadm join~~~
