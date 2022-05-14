@@ -146,7 +146,29 @@ On ***Master*** node initialize clucter
 ***Pay attention CIDR 10.10.0.0/16 must NOT be used on any part of the network***
 
 ```bash
-sudo kubeadm init --pod-network-cidr=10.10.0.0/16
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-Please copy the line started with ---kubeadm join---
+Please copy the line started with *kubeadm join*
+
+Something like
+```bash
+kubeadm join 192.168.10.5:6443 --token x0n92f.fgxdjnofuk95bz81 \
+        --discovery-token-ca-cert-hash sha256:33b32457478f745f671376f6987a38b1a6697574c7ed98fcab2d9139d472f8ad
+```
+
+The IP addres should be one of your Master node
+
+Execute folowing to proceed
+
+```shell
+sudo cp /etc/kubernetes/admin.conf $HOME/
+sudo chown $(id -u):$(id -g) $HOME/admin.conf
+export KUBECONFIG=$HOME/admin.conf
+```
+
+Install CNI (Flannel)
+
+```shell
+kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+```
