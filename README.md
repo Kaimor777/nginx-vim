@@ -306,9 +306,8 @@ Create files
  - index.html
  - Jenkinsfile
 
-#### Dockerfile
 
-Dockerfile context
+*Dockerfile context*
 
 ```shell
 ROM nginx
@@ -318,7 +317,7 @@ RUN ["apt-get", "install", "-y", "vim"]
 COPY index.html /usr/share/nginx/html
 ```
 
-#### Jenkinsfile
+*Jenkinsfile*
 
 Jenkinsfile context
 
@@ -351,3 +350,5 @@ node {
     }
 }
 ```
+
+PLace any code to *index.html*
