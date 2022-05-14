@@ -36,7 +36,7 @@ spec:
               searchNamespace: ALL                 # To look for dashboard configMaps in all namespaces
   syncPolicy:
     automated:
-      prune: true
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
