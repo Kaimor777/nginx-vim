@@ -209,12 +209,16 @@ template:
       hostNetwork: true
       containers:
       - args:
-*       - --kubelet-insecure-tls*
-      * - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname*
+        - --kubelet-insecure-tls
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         - --cert-dir=/tmp
 ```
 
 Added lines should be set up for insecure connectivity support
+
+*- --kubelet-insecure-tls*
+*- --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname*
+*hostNetwork: true*
 
 Install metric server
 
@@ -236,7 +240,7 @@ helm version
 
 ##### Add secondary NIC to Master node
 
-Add it to host-Only network and edit netplan file to setup a static [IP configuration](#Prepare the VM)
+Add it to host-Only network and edit netplan file to setup a static IP configuration
 
 ##### Install ArgoCD via Helm
 
@@ -248,4 +252,9 @@ helm install argocd argo/argo-cd
 
 Follow on screen instructions to retrieve admin one time password
 
-Expose
+Expose the service with following command
+```shell
+kubectl port-forward service/argocd-server -n default 8090:443 --address="0.0.0.0"
+```
+
+Web UI of argoCD will be accessible through any IP of *Master* node

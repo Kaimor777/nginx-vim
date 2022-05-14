@@ -1,0 +1,79 @@
+kubeadm join 192.168.10.4:6443 --token qalsq9.wvuymyebmep86aya --discovery-token-ca-cert-hash sha256:cf5038a4640af8c7540c05b5319ce131c012f29426eb4136e4600c0a74a20cb7
+
+kubeadm join 192.168.10.4:6443 --token qalsq9.wvuymyebmep86aya --discovery-token-ca-cert-hash sha256:cf5038a4640af8c7540c05b5319ce131c012f29426eb4136e4600c0a74a20cb7 --control-plane --certificate-key a711f3fc45984d88a433f23c8aa6535b64caa2e2537d90958efa6a3b08a003be
+
+kubeadm join 192.168.10.5:6443 --token x0n92f.fgxdjnofuk95bz81 \
+        --discovery-token-ca-cert-hash sha256:33b32457478f745f671376f6987a38b1a6697574c7ed98fcab2d9139d472f8ad
+
+
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
+
+
+[Service]
+ExecStart=/usr/local/bin/etcd \
+  --name 192.168.10.7 \
+  --cert-file=/etc/etcd/kubernetes.pem \
+  --key-file=/etc/etcd/kubernetes-key.pem \
+  --peer-cert-file=/etc/etcd/kubernetes.pem \
+  --peer-key-file=/etc/etcd/kubernetes-key.pem \
+  --trusted-ca-file=/etc/etcd/ca.pem \
+  --peer-trusted-ca-file=/etc/etcd/ca.pem \
+  --peer-client-cert-auth \
+  --client-cert-auth \
+  --initial-advertise-peer-urls https://192.168.10.7:2380 \
+  --listen-peer-urls https://192.168.10.7:2380 \
+  --listen-client-urls https://192.168.10.7:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls https://192.168.10.7:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster 192.168.10.5=https://192.168.10.5:2380,192.168.10.6=https://192.168.10.6:2380,192.168.10.7=https://192.168.10.7:2380 \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+
+sudo mv /etc/containerd/config.toml /etc/containerd/config.toml.orig
+sudo systemctl restart containerd
+
+
+[Install]
+WantedBy=multi-user.target
+
+kubeadm init –control-plane-endpoint=”192.168.10.4:6443” –upload-certs –apiserver-advertise-address=192.168.10.5 –pod-network-cidr=10.10.0.0/16
+
+
+1. On Mac:
+  run docker
+  edit /Users/stanislavlander/Documents/Study/Docker4Beginners/Dockerfile
+  docker build /Users/stanislavlander/Documents/Study/Docker4Beginners/Dockerfile -t kaimor777/nginx-vim:1.0.0
+  docker push kaimor777/nginx-vim:1.0.0
+2. kube master
+  create new deployment file
+  apply new deployment
+  kubectl expose deployment nginx-deploy --type=NodePort --port=80
+  ----- we should get new exposed port for application--
+  kubectl get svc nginx-deploy | awk 'NR == 2 {print $5}' | grep -oP '(?<=80:).*(?=/TCP)'
+  edit haproxy config file with new worker nodes ports
+  restart haproxy
+
+
+to connect to kube dashboard
+kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
+https://192.168.59.104:8001/#/login
+
+on haproxy
+  docker run -p 8081:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+
+
+  argoCD
+  helm repo add argo https://argoproj.github.io/argo-helm
+  helm install argocd argo/argo-cd
+  kubectl -n default get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+  argoCD initial pwd: Q5zWtxjo7iT3unyo
+  https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-1-ssl-passthrough
+      - Add the `--insecure` flag to `server.extraArgs` in the values file and terminate SSL at your ingress: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-2-multiple-ingress-objects-and-hosts
+
+  kubectl port-forward service/argocd-server -n default 8090:443 --address="0.0.0.0"
+  https://192.168.59.104:8090/applications
