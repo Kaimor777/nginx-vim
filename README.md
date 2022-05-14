@@ -9,4 +9,7 @@ Test project for Tikal company to apply for DevOps position.
  - CI\CD pipeline
 ## Environment setup
 
-###
+### K8S
+Kubernetes cluster setup
+
+Virtualization platform: [Oracle VirtualBox 6.1](https://www.virtualbox.org/wiki/Downloads)
