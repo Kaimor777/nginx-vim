@@ -4,12 +4,21 @@
 
 Test project for Tikal company to apply for DevOps position.
 
+# What it does
+
+Custom Docker Image of *nginx* will be created on DockerHub with HTML page with Jenkins
+
+Deployment will be done through ArgoCD
+
+The page will be available within local environment only
+
 ## Requirements
 
  - Kubernetes cluster
  - GitHub public repository public access
  - DockerHub repository (public or private)
  - CI\\CD pipeline
+
 ## Setup
 
 ### Environment
@@ -258,3 +267,63 @@ kubectl port-forward service/argocd-server -n default 8090:443 --address="0.0.0.
 ```
 
 Web UI of argoCD will be accessible through any IP of *Master* node
+
+
+### GitHub
+
+Setup a github repository with public accessible
+
+For project purposes repository will be public
+
+Create a subfolders named *argocd/nginx-vim-stable*
+
+Create files
+ - Dockerfile
+ - index.html
+ - Jenkinsfile
+
+#### Dockerfile
+
+Dockerfile context
+
+```shell
+ROM nginx
+
+RUN ["apt-get", "update"]
+RUN ["apt-get", "install", "-y", "vim"]
+COPY index.html /usr/share/nginx/html
+```
+
+#### Jenkinsfile
+
+Jenkinsfile context
+
+```shell
+node {
+    def app
+
+    stage('Clone repository') {
+        /* Let's make sure we have the repository cloned to our workspace */
+
+        checkout scm
+    }
+
+    stage('Build image') {
+        /* This builds the actual image; synonymous to
+         * docker build on the command line */
+
+        app = docker.build("kaimor777/nginx-vim")
+    }
+
+    stage('Push image') {
+        /* Finally, we'll push the image with two tags:
+         * First, the incremental build number from Jenkins
+         * Second, the 'latest' tag.
+         * Pushing multiple tags is cheap, as all the layers are reused. */
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+    }
+}
+```
