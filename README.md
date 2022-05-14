@@ -149,4 +149,4 @@ On ***Master*** node initialize clucter
 sudo kubeadm init --pod-network-cidr=10.10.0.0/16
 ```
 
-Please copy the line started with ~~~kubeadm join~~~
+Please copy the line started with ---kubeadm join---
