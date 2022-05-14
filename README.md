@@ -42,9 +42,11 @@ Install Ubuntu 20.04 LTS Server following [installation procedure](https://linux
 
 Login to created machines and change IP addresses to static
 Create new YAML configuration file for ***netplan*** service
+
 ```bash
 sudo vim /etc/netplan/01-network.yaml
 ```
+
 Add static IP configuration including default route and DNS servers
 
 Restart netplan service
@@ -89,6 +91,8 @@ Reload config
 ```bash
 sudo sysctl --system
 ```
+
+##### Install K8S cluster
 
 Install required packages
 
@@ -174,3 +178,74 @@ kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube
 ```
 
 *To join Worker nodes execute copied string **kubeadm join** with sudo*
+
+And to confirm, when we do a `kubectl get nodes`, we should see something like:
+
+```shell
+NAME                            STATUS    AGE       VERSION
+server1                         Ready     46m       v1.7.0
+server2                         Ready     3m        v1.7.0
+server3                         Ready     2m        v1.7.0
+```
+
+##### Install Metric server
+
+```shell
+wget https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+Edit file components.yaml
+
+```shell
+vim components.yaml
+```
+
+```shell
+template:
+    metadata:
+      labels:
+        k8s-app: metrics-server
+    spec:
+      hostNetwork: true
+      containers:
+      - args:
+*       - --kubelet-insecure-tls*
+      * - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname*
+        - --cert-dir=/tmp
+```
+
+Added lines should be set up for insecure connectivity support
+
+Install metric server
+
+```shell
+kubectl apply -f components.yaml
+```
+
+##### Install Helm
+
+On *Master* node:
+
+```shell
+curl -O https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+
+bash ./get-helm-3
+
+helm version
+```
+
+##### Add secondary NIC to Master node
+
+Add it to host-Only network and edit netplan file to setup a static [IP configuration](#Prepare the VM's)
+
+##### Install ArgoCD via Helm
+
+
+```shell
+helm repo add argo https://argoproj.github.io/argo-helm
+helm install argocd argo/argo-cd
+```
+
+Follow on screen instructions to retrieve admin one time password
+
+Expose
