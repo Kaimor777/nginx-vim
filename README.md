@@ -30,6 +30,12 @@ Create 3 virtual machines:
 Install Ubuntu 20.04 LTS Server following [installation procedure](https://linuxhint.com/install_ubuntu_virtualbox_2004/)
 
 Login to created machines and change IP addresses to static
+Create new YAML configuration file for ***netplan*** service
 ```bash
 sudo vim /etc/netplan/01-network.yaml
 ```
+Add static IP configuration including default route and DNS servers
+
+Restart netplan service
+
+Change hostname on all machines to unique one
