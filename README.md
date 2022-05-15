@@ -437,3 +437,9 @@ Choose type of *Pipeline*
   ```shell
   H * * * *
   ```
+
+- *Advanced Project Options*
+  Definition: Pipeline script from SCM
+  SCM: Git
+  Repositories -> Repository URL: https://YOUR_Git_Repo_URL
+  Credentials: none
