@@ -267,7 +267,9 @@ kubectl port-forward service/argocd-server -n default 8090:443 --address="0.0.0.
 
 Web UI of argoCD will be accessible through any IP of *Master* node
 
-### DockerHub
+### CI\\CD pipeline
+
+#### DockerHub
 
 Create a private repository within your account named *nginx-vim*
 
@@ -293,7 +295,7 @@ kubectl create secret generic regcred \
     --type=kubernetes.io/dockerconfigjson
 ```
 
-### GitHub
+#### GitHub
 
 Setup a github repository with public accessible
 
@@ -352,3 +354,74 @@ node {
 ```
 
 PLace any code to *index.html*
+
+
+#### Jenkins environment
+
+Install additional VM: Ubuntu 20.04, 1 CPU, 2GB RAM
+1 NIC: host-Only network
+2 NIC: NAT network
+
+Setup static IP addresses for both NIC with appropriate network settings
+
+Install Jenkins
+```shell
+sudo apt-get update
+
+sudo apt-get install openjdk-8-jdk
+
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+
+sudo apt-get update
+
+sudo apt install default-jdk
+
+sudo apt-get install jenkins
+
+sudo apt install git
+```
+
+Retrieve initial password from installation log
+
+```shell
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+To be able to make container image Jenkins server must have container runtime installed.
+
+```shell
+sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+To provide Jenkins availability to run docker compose add jenkins user to *docker* group
+
+```shell
+sudo usermod -aG docker jenkins
+```
+
+#### Jenkins configuration
+
+Login to Jenkins
+
+From Jenkins *Dashboard* -> *Manage Jenkins* -> *Manage Plugins*
+
+Install following plugins:
+ - Docker Pipeline
+ - Docker Plugin
+ - docker-build-step
+
+Setup credentials for Docker Hub private CR:
+
+*Dashboard* -> *Manage Jenkins* -> *Manage Credentials*
+
+Create new credentials with ID: *docker-hub-credentials* (will be used at Jenkinsfile) of **Username and Password** kind
