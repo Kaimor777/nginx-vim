@@ -12,7 +12,7 @@ Deployment will be done through ArgoCD
 
 The page will be available within local environment only
 
-## Requirements
+# Requirements
 
  - Kubernetes cluster
  - GitHub public repository public access
@@ -353,7 +353,7 @@ node {
 }
 ```
 
-PLace any code to *index.html*
+PLace any HTML code to *index.html*
 
 
 #### Jenkins environment
@@ -425,3 +425,15 @@ Setup credentials for Docker Hub private CR:
 *Dashboard* -> *Manage Jenkins* -> *Manage Credentials*
 
 Create new credentials with ID: *docker-hub-credentials* (will be used at Jenkinsfile) of **Username and Password** kind
+
+## Project workload
+
+Login to Jenkins and create *New Item* from Dashboard
+
+Choose type of *Pipeline*
+
+- On *General* tab
+  Build Triggers -> Poll SCM -> Schedule
+  ```shell
+  H * * * *
+  ```
