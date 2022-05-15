@@ -8,8 +8,7 @@ node {
     }
 
     stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
+        /* This builds the actual image; */
 
         app = docker.build("kaimor777/nginx-vim")
     }
