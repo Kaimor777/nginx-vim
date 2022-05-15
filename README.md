@@ -6,11 +6,15 @@ Test project for Tikal company to apply for DevOps position.
 
 # What it does
 
-Custom Docker Image of *nginx* will be created on DockerHub with HTML page with Jenkins
+Custom Docker Image of *nginx* will be created on DockerHub with HTML page via Jenkins
 
 Deployment will be done through ArgoCD
 
 The page will be available within local environment only
+
+YAML files are available with [my repository](https://github.com/Kaimor777/nginx-vim/tree/main/argocd)
+
+Feel free to change the container image for one of your
 
 # Requirements
 
@@ -18,6 +22,8 @@ The page will be available within local environment only
  - GitHub public repository public access
  - DockerHub repository (public or private)
  - CI\\CD pipeline
+
+#
 
 ## Setup
 
@@ -258,9 +264,12 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd argo/argo-cd
 ```
 
-Follow on screen instructions to retrieve admin one time password
+Follow instructions to retrieve admin one time password
+
+*Don't forget to change admin password*
 
 Expose the service with following command
+
 ```shell
 kubectl port-forward service/argocd-server -n default 8090:443 --address="0.0.0.0"
 ```
@@ -426,7 +435,9 @@ Setup credentials for Docker Hub private CR:
 
 Create new credentials with ID: *docker-hub-credentials* (will be used at Jenkinsfile) of **Username and Password** kind
 
-## Project workload
+## Project workload setup
+
+### Jenkins
 
 Login to Jenkins and create *New Item* from Dashboard
 
@@ -443,3 +454,33 @@ Choose type of *Pipeline*
   SCM: Git
   Repositories -> Repository URL: https://YOUR_Git_Repo_URL
   Credentials: none
+  Branches to build: main
+  Script Path: Jenkinsfile
+
+### ArgoCD
+
+Login to argoCD
+
+Create project named *nginx-vim*
+
+Add your GitHub repository to use with it
+
+Create an application with following manifest
+
+```shell
+project: nginx-vim
+source:
+  repoURL: 'Your GitHub URL'
+  path: argocd/nginx-vim-stable/
+  targetRevision: main
+  directory:
+    recurse: true
+    jsonnet: {}
+destination:
+  server: 'https://kubernetes.default.svc'
+  namespace: default
+syncPolicy:
+  automated: {}
+  syncOptions:
+    - PruneLast=true
+```
